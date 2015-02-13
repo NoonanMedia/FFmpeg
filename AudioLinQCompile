@@ -1,0 +1,60 @@
+#!/bin/sh
+
+#Cleanup
+cd ../
+rm -rf Install > /dev/null
+rm -rf bin > /dev/null
+cd lame
+make clean
+cd ../FFmpeg
+make clean
+
+#Configure Lame
+make clean
+cd ../lame
+./configure --prefix="/Users/eliotstocker/Desktop/Build/Install"
+
+#Compile Lame
+make
+make install
+
+#Configure FFMPEG
+cd ../FFmpeg
+make clean
+./configure --prefix="/Users/eliotstocker/Desktop/Build/Install" --enable-libmp3lame --disable-devices --enable-pthreads --disable-bsfs --enable-bsf=aac* --enable-bsf=mp3* --disable-filters --enable-filter=a* --disable-protocols --enable-protocol=rt* --enable-protocol=file --enable-protocol=pipe --enable-protocol=hls --disable-muxers --enable-muxer=flv --enable-muxer=wav --enable-muxer=mp3 --disable-encoders --enable-encoder=libmp3lame --enable-encoder=aac --enable-encoder=flv --enable-encoder=flac --enable-encoder=wav* --enable-encoder=pcm* --disable-decoders --enable-decoder=aac --enable-decoder=mp3* --enable-decoder=wav* --enable-decoder=pcm* --disable-parsers --enable-parser=aac* --enable-parser=flac --disable-demuxers --enable-demuxer=mp3 --enable-demuxer=wav --enable-demuxer=flv --enable-demuxer=aac --disable-hwaccels --disable-debug --enable-shared --enable-small --disable-static --disable-doc --disable-ffprobe --disable-ffserver --extra-ldflags="-L/Users/eliotstocker/Desktop/Build/Install/lib" --extra-cflags="-I/Users/eliotstocker/Desktop/Build/Install/include"
+
+make
+make install
+
+#relink dynamic libraries
+cd ../Install/bin/
+mv -f ../lib lib
+
+#Relink Binary
+install_name_tool -change /Users/eliotstocker/Desktop/Build/Install/lib/libavdevice.56.dylib @executable_path/lib/libavdevice.56.dylib ffmpeg
+install_name_tool -change /Users/eliotstocker/Desktop/Build/Install/lib/libavfilter.5.dylib @executable_path/lib/libavfilter.5.dylib ffmpeg
+install_name_tool -change /Users/eliotstocker/Desktop/Build/Install/lib/libavformat.56.dylib @executable_path/lib/libavformat.56.dylib ffmpeg
+install_name_tool -change /Users/eliotstocker/Desktop/Build/Install/lib/libavcodec.56.dylib @executable_path/lib/libavcodec.56.dylib ffmpeg
+install_name_tool -change /Users/eliotstocker/Desktop/Build/Install/lib/libswresample.1.dylib @executable_path/lib/libswresample.1.dylib ffmpeg
+install_name_tool -change /Users/eliotstocker/Desktop/Build/Install/lib/libswscale.3.dylib @executable_path/lib/libswscale.3.dylib ffmpeg
+install_name_tool -change /Users/eliotstocker/Desktop/Build/Install/lib/libavutil.54.dylib @executable_path/lib/libavutil.54.dylib ffmpeg
+install_name_tool -change /Users/eliotstocker/Desktop/Build/Install/lib/libmp3lame.0.dylib @executable_path/lib/libmp3lame.0.dylib ffmpeg
+
+cd lib
+#Relink Libaries
+for filename in *.dylib; do
+    install_name_tool -change /Users/eliotstocker/Desktop/Build/Install/lib/libavdevice.56.dylib @executable_path/lib/libavdevice.56.dylib $filename
+	install_name_tool -change /Users/eliotstocker/Desktop/Build/Install/lib/libavfilter.5.dylib @executable_path/lib/libavfilter.5.dylib $filename
+	install_name_tool -change /Users/eliotstocker/Desktop/Build/Install/lib/libavformat.56.dylib @executable_path/lib/libavformat.56.dylib $filename
+	install_name_tool -change /Users/eliotstocker/Desktop/Build/Install/lib/libavcodec.56.dylib @executable_path/lib/libavcodec.56.dylib $filename
+	install_name_tool -change /Users/eliotstocker/Desktop/Build/Install/lib/libswresample.1.dylib @executable_path/lib/libswresample.1.dylib $filename
+	install_name_tool -change /Users/eliotstocker/Desktop/Build/Install/lib/libswscale.3.dylib @executable_path/lib/libswscale.3.dylib $filename
+	install_name_tool -change /Users/eliotstocker/Desktop/Build/Install/lib/libavutil.54.dylib @executable_path/lib/libavutil.54.dylib $filename
+	install_name_tool -change /Users/eliotstocker/Desktop/Build/Install/lib/libmp3lame.0.dylib @executable_path/lib/libmp3lame.0.dylib $filename
+done
+
+cd ../../../
+mv -f Install/bin bin
+
+rm -f bin/lame
+rm -rf Install > /dev/null
