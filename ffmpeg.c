@@ -36,6 +36,19 @@
 #if HAVE_IO_H
 #include <io.h>
 #endif
+
+#if HAVE_SYS_RESOURCE_H
+#include <sys/time.h>
+#include <sys/types.h>
+#include <sys/resource.h>
+#elif HAVE_GETPROCESSTIMES
+#include <windows.h>
+#endif
+#if HAVE_GETPROCESSMEMORYINFO
+#include <windows.h>
+#include <psapi.h>
+#endif
+
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif
@@ -66,18 +79,6 @@
 # include "libavfilter/avfilter.h"
 # include "libavfilter/buffersrc.h"
 # include "libavfilter/buffersink.h"
-
-#if HAVE_SYS_RESOURCE_H
-#include <sys/time.h>
-#include <sys/types.h>
-#include <sys/resource.h>
-#elif HAVE_GETPROCESSTIMES
-#include <windows.h>
-#endif
-#if HAVE_GETPROCESSMEMORYINFO
-#include <windows.h>
-#include <psapi.h>
-#endif
 
 #if HAVE_SYS_SELECT_H
 #include <sys/select.h>

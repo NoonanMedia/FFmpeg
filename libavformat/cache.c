@@ -34,6 +34,7 @@
 #include "libavutil/tree.h"
 #include "avformat.h"
 #include <fcntl.h>
+#include "os_support.h"
 #if HAVE_IO_H
 #include <io.h>
 #endif
@@ -42,7 +43,6 @@
 #endif
 #include <sys/stat.h>
 #include <stdlib.h>
-#include "os_support.h"
 #include "url.h"
 
 typedef struct CacheEntry {

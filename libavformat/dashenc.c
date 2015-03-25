@@ -20,6 +20,7 @@
  */
 
 #include "config.h"
+#include "os_support.h"
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif
@@ -35,7 +36,6 @@
 #include "avio_internal.h"
 #include "internal.h"
 #include "isom.h"
-#include "os_support.h"
 #include "url.h"
 
 // See ISO/IEC 23009-1:2014 5.3.9.4.4
