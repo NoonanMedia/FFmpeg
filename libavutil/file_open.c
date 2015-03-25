@@ -22,6 +22,7 @@
 #include <stdarg.h>
 #include <fcntl.h>
 #include <sys/stat.h>
+#include <windows.h>
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif
@@ -34,7 +35,6 @@
 #undef lseek
 #undef stat
 #undef fstat
-#include <windows.h>
 #include <share.h>
 #include <errno.h>
 #include "wchar_filename.h"

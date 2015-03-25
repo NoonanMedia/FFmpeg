@@ -21,13 +21,13 @@
 
 #include "config.h"
 #include <float.h>
+#include "os_support.h"
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif
 
 #include "avformat.h"
 #include "internal.h"
-#include "os_support.h"
 #include "avc.h"
 #include "url.h"
 #include "isom.h"

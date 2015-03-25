@@ -20,6 +20,7 @@
 
 #include "config.h"
 
+#include <windows.h>
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif
@@ -27,7 +28,6 @@
 #include <io.h>
 #endif
 #if HAVE_CRYPTGENRANDOM
-#include <windows.h>
 #include <wincrypt.h>
 #endif
 #include <fcntl.h>
