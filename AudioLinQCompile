@@ -4,8 +4,7 @@ DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 INSTALL="$DIR/../Install"
 BASE="$DIR/.."
 
-echo $DIR;
-
+echo "---- Cleanup ----"
 #Cleanup
 cd $BASE
 rm -rf $INSTALL > /dev/null
@@ -15,15 +14,19 @@ make clean
 cd $BASE/FFmpeg
 make clean
 
+echo "---- Compile Lame ----"
 #Configure Lame
 make clean
 cd $BASE/lame
 ./configure --prefix="$INSTALL"
 
+LDFLAGS="$LDFLAGS -static-libgcc"
+
 #Compile Lame
 make
 make install
 
+echo "---- Compile FFMPEG ----"
 #Configure FFMPEG
 cd $BASE/FFmpeg
 make clean
@@ -33,6 +36,7 @@ make
 make install
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
+    echo "---- Link Libraries ----"
 	#relink dynamic libraries
     cd $INSTALL/bin/
     mv -f ../lib lib
@@ -65,10 +69,13 @@ fi
 
 mkdir $BASE/bin
 if [[ "$OSTYPE" == "darwin"* ]]; then
+    echo "---- Output OSX Binaries ----"
 	mv -f $INSTALL/bin $BASE/bin/osx
 	rm -f $BASE/bin/osx/lame
 else
+    echo "---- Output Windows Binaries ----"
 	mv -f $INSTALL/bin $BASE/bin/win
 	rm -f $BASE/bin/win/lame.exe
 fi
 rm -rf $INSTALL > /dev/null
+echo "---- Complete Please check 'bin' Folder ----"
