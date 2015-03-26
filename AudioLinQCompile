@@ -20,8 +20,6 @@ make clean
 cd $BASE/lame
 ./configure --prefix="$INSTALL"
 
-LDFLAGS="$LDFLAGS -static-libgcc"
-
 #Compile Lame
 make
 make install
@@ -30,7 +28,7 @@ echo "---- Compile FFMPEG ----"
 #Configure FFMPEG
 cd $BASE/FFmpeg
 make clean
-./configure --prefix="$INSTALL" --enable-libmp3lame --disable-devices --enable-pthreads --disable-bsfs --enable-bsf=aac* --enable-bsf=mp3* --disable-filters --enable-filter=a* --disable-protocols --enable-protocol=rt* --enable-protocol=file --enable-protocol=pipe --enable-protocol=hls --disable-muxers --enable-muxer=flv --enable-muxer=wav --enable-muxer=mp3 --disable-encoders --enable-encoder=libmp3lame --enable-encoder=aac --enable-encoder=flv --enable-encoder=flac --enable-encoder=wav* --enable-encoder=pcm* --disable-decoders --enable-decoder=aac --enable-decoder=mp3* --enable-decoder=wav* --enable-decoder=pcm* --disable-parsers --enable-parser=aac* --enable-parser=flac --disable-demuxers --enable-demuxer=mp3 --enable-demuxer=wav --enable-demuxer=flv --enable-demuxer=aac --disable-hwaccels --disable-debug --enable-shared --enable-small --disable-static --disable-doc --disable-ffprobe --disable-ffserver --extra-ldflags="-L$INSTALL/lib" --extra-cflags="-I$INSTALL/include"
+./configure --prefix="$INSTALL" --enable-libmp3lame --disable-devices --enable-pthreads --disable-bsfs --enable-bsf=aac* --enable-bsf=mp3* --disable-filters --enable-filter=a* --disable-protocols --enable-protocol=rt* --enable-protocol=file --enable-protocol=pipe --enable-protocol=hls --disable-muxers --enable-muxer=flv --enable-muxer=wav --enable-muxer=mp3 --disable-encoders --enable-encoder=libmp3lame --enable-encoder=aac --enable-encoder=flv --enable-encoder=flac --enable-encoder=wav* --enable-encoder=pcm* --disable-decoders --enable-decoder=aac --enable-decoder=mp3* --enable-decoder=wav* --enable-decoder=pcm* --disable-parsers --enable-parser=aac* --enable-parser=flac --disable-demuxers --enable-demuxer=mp3 --enable-demuxer=wav --enable-demuxer=flv --enable-demuxer=aac --disable-hwaccels --disable-debug --enable-shared --enable-small --disable-static --disable-doc --disable-ffprobe --disable-ffserver --extra-ldflags="-L$INSTALL/lib -static-libgcc -mthreads -static" --extra-cflags="-I$INSTALL/include"
 
 make
 make install
