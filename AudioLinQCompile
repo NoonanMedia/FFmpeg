@@ -6,18 +6,17 @@ BASE="$DIR/.."
 
 echo "---- Cleanup ----"
 #Cleanup
-cd $BASE
-rm -rf $INSTALL > /dev/null
-rm -rf $BASE/bin > /dev/null
-cd $BASE/lame
+cd "$BASE"
+rm -rf "$INSTALL" > /dev/null
+rm -rf "$BASE/bin" > /dev/null
+cd "$BASE/lame"
 make clean
-cd $BASE/FFmpeg
+cd "$BASE/FFmpeg"
 make clean
 
 echo "---- Compile Lame ----"
 #Configure Lame
-make clean
-cd $BASE/lame
+cd "$BASE/lame"
 ./configure --prefix="$INSTALL"
 
 #Compile Lame
@@ -26,9 +25,13 @@ make install
 
 echo "---- Compile FFMPEG ----"
 #Configure FFMPEG
-cd $BASE/FFmpeg
+cd "$BASE/FFmpeg"
 make clean
-./configure --prefix="$INSTALL" --enable-libmp3lame --disable-devices --enable-pthreads --disable-bsfs --enable-bsf=aac* --enable-bsf=mp3* --disable-filters --enable-filter=a* --disable-protocols --enable-protocol=rt* --enable-protocol=file --enable-protocol=pipe --enable-protocol=hls --disable-muxers --enable-muxer=flv --enable-muxer=wav --enable-muxer=mp3 --disable-encoders --enable-encoder=libmp3lame --enable-encoder=aac --enable-encoder=flv --enable-encoder=flac --enable-encoder=wav* --enable-encoder=pcm* --disable-decoders --enable-decoder=aac --enable-decoder=mp3* --enable-decoder=wav* --enable-decoder=pcm* --disable-parsers --enable-parser=aac* --enable-parser=flac --disable-demuxers --enable-demuxer=mp3 --enable-demuxer=wav --enable-demuxer=flv --enable-demuxer=aac --disable-hwaccels --disable-debug --enable-shared --enable-small --disable-static --disable-doc --disable-ffprobe --disable-ffserver --extra-ldflags="-L$INSTALL/lib -static-libgcc -mthreads -static" --extra-cflags="-I$INSTALL/include"
+if [[ "$OSTYPE" == "darwin"* ]]; then
+	./configure --prefix="$INSTALL" --enable-libmp3lame --disable-devices --enable-pthreads --disable-bsfs --enable-bsf=aac* --enable-bsf=mp3* --disable-filters --enable-filter=a* --disable-protocols --enable-protocol=rt* --enable-protocol=file --enable-protocol=pipe --enable-protocol=hls --disable-muxers --enable-muxer=flv --enable-muxer=wav --enable-muxer=mp3 --disable-encoders --enable-encoder=libmp3lame --enable-encoder=aac --enable-encoder=flv --enable-encoder=flac --enable-encoder=wav* --enable-encoder=pcm* --disable-decoders --enable-decoder=aac --enable-decoder=mp3* --enable-decoder=wav* --enable-decoder=pcm* --disable-parsers --enable-parser=aac* --enable-parser=flac --disable-demuxers --enable-demuxer=mp3 --enable-demuxer=wav --enable-demuxer=flv --enable-demuxer=aac --enable-indev=avfoundation --enable-filter=volume --enable-filter=volumedetect --disable-hwaccels --disable-debug --enable-shared --enable-small --disable-static --disable-doc --disable-ffprobe --disable-ffserver --extra-ldflags="-L$INSTALL/lib" --extra-cflags="-I$INSTALL/include"
+else
+	./configure --prefix="$INSTALL" --enable-libmp3lame --disable-devices --enable-pthreads --disable-bsfs --enable-bsf=aac* --enable-bsf=mp3* --disable-filters --enable-filter=a* --disable-protocols --enable-protocol=rt* --enable-protocol=file --enable-protocol=pipe --enable-protocol=hls --disable-muxers --enable-muxer=flv --enable-muxer=wav --enable-muxer=mp3 --disable-encoders --enable-encoder=libmp3lame --enable-encoder=aac --enable-encoder=flv --enable-encoder=flac --enable-encoder=wav* --enable-encoder=pcm* --disable-decoders --enable-decoder=aac --enable-decoder=mp3* --enable-decoder=wav* --enable-decoder=pcm* --disable-parsers --enable-parser=aac* --enable-parser=flac --disable-demuxers --enable-demuxer=mp3 --enable-demuxer=wav --enable-demuxer=flv --enable-demuxer=aac --enable-filter=volume --enable-filter=volumedetect --disable-hwaccels --disable-debug --enable-shared --enable-small --disable-static --disable-doc --disable-ffprobe --disable-ffserver --extra-ldflags="-L$INSTALL/lib -static-libgcc -mthreads -static" --extra-cflags="-I$INSTALL/include"
+fi
 
 make
 make install
@@ -36,7 +39,7 @@ make install
 if [[ "$OSTYPE" == "darwin"* ]]; then
     echo "---- Link Libraries ----"
 	#relink dynamic libraries
-    cd $INSTALL/bin/
+    cd "$INSTALL/bin/"
     mv -f ../lib lib
 
     #Relink Binary
@@ -62,18 +65,18 @@ if [[ "$OSTYPE" == "darwin"* ]]; then
     	install_name_tool -change "$INSTALL/lib/libmp3lame.0.dylib" @executable_path/lib/libmp3lame.0.dylib $filename
     done
 
-    cd $BASE
+    cd "$BASE"
 fi
 
-mkdir $BASE/bin
+mkdir "$BASE/bin"
 if [[ "$OSTYPE" == "darwin"* ]]; then
     echo "---- Output OSX Binaries ----"
-	mv -f $INSTALL/bin $BASE/bin/osx
-	rm -f $BASE/bin/osx/lame
+	mv -f "$INSTALL/bin" "$BASE/bin/osx"
+	rm -f "$BASE/bin/osx/lame"
 else
     echo "---- Output Windows Binaries ----"
-	mv -f $INSTALL/bin $BASE/bin/win
-	rm -f $BASE/bin/win/lame.exe
+	mv -f "$INSTALL/bin" "$BASE/bin/win"
+	rm -f "$BASE/bin/win/lame.exe"
 fi
-rm -rf $INSTALL > /dev/null
+rm -rf "$INSTALL" > /dev/null
 echo "---- Complete Please check 'bin' Folder ----"

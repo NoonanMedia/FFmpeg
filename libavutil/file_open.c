@@ -22,7 +22,9 @@
 #include <stdarg.h>
 #include <fcntl.h>
 #include <sys/stat.h>
+#if defined(_WIN32) || defined(WIN32)
 #include <windows.h>
+#endif
 #if HAVE_UNISTD_H
 #include <unistd.h>
 #endif
